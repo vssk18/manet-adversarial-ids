@@ -1,0 +1,71 @@
+{
+  "clean_test": {
+    "mean_distance": 1.1047375783725253,
+    "median_distance": 1.0898600310029427,
+    "std_distance": 0.4975007102332959,
+    "max_distance": 3.6194662494770373,
+    "min_distance": 0.1932401516614982,
+    "mean_1nn_distance": 0.9250450083487601,
+    "mean_knn_distance": 1.2294758971066078
+  },
+  "logistic_regression_fgsm": {
+    "mean_distance": 1.2865780161661002,
+    "median_distance": 1.239508616531133,
+    "std_distance": 0.42573568662365413,
+    "max_distance": 3.414031725219695,
+    "min_distance": 0.5451083835201798,
+    "mean_1nn_distance": 1.1221402122021775,
+    "mean_knn_distance": 1.4032049002095321,
+    "ratio_1nn": 1.2130655287846368
+  },
+  "logistic_regression_pgd": {
+    "mean_distance": 1.187425454386095,
+    "median_distance": 1.1534003995417743,
+    "std_distance": 0.4772690404707912,
+    "max_distance": 3.7881275342223333,
+    "min_distance": 0.28237034286963475,
+    "mean_1nn_distance": 1.0130121328047141,
+    "mean_knn_distance": 1.3092134369172395,
+    "ratio_1nn": 1.0950949669065062
+  },
+  "decision_tree_fgsm": {
+    "mean_distance": 1.1047375783725253,
+    "median_distance": 1.0898600310029427,
+    "std_distance": 0.4975007102332959,
+    "max_distance": 3.6194662494770373,
+    "min_distance": 0.1932401516614982,
+    "mean_1nn_distance": 0.9250450083487601,
+    "mean_knn_distance": 1.2294758971066078,
+    "ratio_1nn": 1.0
+  },
+  "decision_tree_pgd": {
+    "mean_distance": 1.180166144263098,
+    "median_distance": 1.147498600645736,
+    "std_distance": 0.4797073418044287,
+    "max_distance": 3.782080361581091,
+    "min_distance": 0.27209219463716783,
+    "mean_1nn_distance": 1.0074882678920296,
+    "mean_knn_distance": 1.3022618418181755,
+    "ratio_1nn": 1.0891235116120823
+  },
+  "xgboost_fgsm": {
+    "mean_distance": 1.1047375783725253,
+    "median_distance": 1.0898600310029427,
+    "std_distance": 0.4975007102332959,
+    "max_distance": 3.6194662494770373,
+    "min_distance": 0.1932401516614982,
+    "mean_1nn_distance": 0.9250450083487601,
+    "mean_knn_distance": 1.2294758971066078,
+    "ratio_1nn": 1.0
+  },
+  "xgboost_pgd": {
+    "mean_distance": 1.1844499497403838,
+    "median_distance": 1.1557226149953084,
+    "std_distance": 0.48072410051722436,
+    "max_distance": 3.7028130446454703,
+    "min_distance": 0.28707735025354214,
+    "mean_1nn_distance": 1.010390384930803,
+    "mean_knn_distance": 1.3046100069508728,
+    "ratio_1nn": 1.092260782785464
+  }
+}

@@ -1,0 +1,7 @@
+Method,Epsilon,Success Rate,Distance,Status,Realistic
+Standard FGSM,0.3,21.4%,1.21x,On-manifold,No
+Standard FGSM,1.0,95.2%,2.09x,Moderate,No
+Standard FGSM,3.0,99.9%,5.70x,Off-manifold,No
+Feature-Aware,0.01,1.9%,0.99x,On-manifold,Yes
+Feature-Aware,0.05,1.9%,0.99x,On-manifold,Yes
+Feature-Aware,0.10,2.2%,0.99x,On-manifold,Yes

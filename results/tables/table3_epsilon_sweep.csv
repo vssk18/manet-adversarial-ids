@@ -1,0 +1,9 @@
+Epsilon (ε),Attack Success Rate,Distance Ratio,Manifold Status
+0.10,5.28%,1.03x,On-Manifold
+0.30,21.41%,1.21x,On-Manifold
+0.50,46.84%,1.48x,On-Manifold
+0.70,77.17%,1.77x,On-Manifold
+1.00,95.17%,2.09x,Moderate
+1.50,99.26%,2.50x,Moderate
+2.00,99.93%,3.32x,Moderate
+3.00,99.93%,5.70x,Moderate

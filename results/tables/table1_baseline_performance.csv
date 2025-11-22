@@ -1,0 +1,4 @@
+Model,Test Accuracy
+Logistic Regression,98.14%
+Decision Tree,97.10%
+Xgboost,98.74%

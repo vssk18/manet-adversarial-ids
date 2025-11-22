@@ -1,0 +1,46 @@
+{
+  "feature_aware_eps_0.01": {
+    "model": "logistic_regression",
+    "epsilon_budget": 0.01,
+    "clean_accuracy": 0.9814126394052045,
+    "adversarial_accuracy": 0.9814126394052045,
+    "success_rate": 0.018587360594795488,
+    "mean_distance_clean": 0.9250450083487601,
+    "mean_distance_adversarial": 0.9186641345372596,
+    "distance_ratio": 0.9931020936777004,
+    "status": "on-manifold"
+  },
+  "feature_aware_eps_0.03": {
+    "model": "logistic_regression",
+    "epsilon_budget": 0.03,
+    "clean_accuracy": 0.9814126394052045,
+    "adversarial_accuracy": 0.9806691449814127,
+    "success_rate": 0.019330855018587334,
+    "mean_distance_clean": 0.9250450083487601,
+    "mean_distance_adversarial": 0.9187080188381663,
+    "distance_ratio": 0.9931495338568385,
+    "status": "on-manifold"
+  },
+  "feature_aware_eps_0.05": {
+    "model": "logistic_regression",
+    "epsilon_budget": 0.05,
+    "clean_accuracy": 0.9814126394052045,
+    "adversarial_accuracy": 0.9806691449814127,
+    "success_rate": 0.019330855018587334,
+    "mean_distance_clean": 0.9250450083487601,
+    "mean_distance_adversarial": 0.9188985891449757,
+    "distance_ratio": 0.9933555457860844,
+    "status": "on-manifold"
+  },
+  "feature_aware_eps_0.1": {
+    "model": "logistic_regression",
+    "epsilon_budget": 0.1,
+    "clean_accuracy": 0.9814126394052045,
+    "adversarial_accuracy": 0.9784386617100371,
+    "success_rate": 0.021561338289962872,
+    "mean_distance_clean": 0.9250450083487601,
+    "mean_distance_adversarial": 0.9197761081253574,
+    "distance_ratio": 0.9943041687962751,
+    "status": "on-manifold"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "logistic_regression": [
+    {
+      "epsilon": 0.1,
+      "clean_accuracy": 0.9814126394052045,
+      "adversarial_accuracy": 0.9472118959107807,
+      "success_rate": 0.0527881040892193,
+      "mean_distance": 0.9514598249846145,
+      "distance_ratio": 1.0285551690971293,
+      "status": "on-manifold"
+    },
+    {
+      "epsilon": 0.3,
+      "clean_accuracy": 0.9814126394052045,
+      "adversarial_accuracy": 0.7858736059479554,
+      "success_rate": 0.2141263940520446,
+      "mean_distance": 1.1221402122021775,
+      "distance_ratio": 1.2130655287846368,
+      "status": "on-manifold"
+    },
+    {
+      "epsilon": 0.5,
+      "clean_accuracy": 0.9814126394052045,
+      "adversarial_accuracy": 0.5315985130111525,
+      "success_rate": 0.46840148698884754,
+      "mean_distance": 1.3708731980691469,
+      "distance_ratio": 1.4819529706086483,
+      "status": "on-manifold"
+    },
+    {
+      "epsilon": 0.7,
+      "clean_accuracy": 0.9814126394052045,
+      "adversarial_accuracy": 0.22825278810408922,
+      "success_rate": 0.7717472118959108,
+      "mean_distance": 1.6390062367768086,
+      "distance_ratio": 1.7718124220814897,
+      "status": "on-manifold"
+    },
+    {
+      "epsilon": 1.0,
+      "clean_accuracy": 0.9814126394052045,
+      "adversarial_accuracy": 0.048327137546468404,
+      "success_rate": 0.9516728624535316,
+      "mean_distance": 1.937832936853088,
+      "distance_ratio": 2.094852595672282,
+      "status": "moderate"
+    },
+    {
+      "epsilon": 1.5,
+      "clean_accuracy": 0.9814126394052045,
+      "adversarial_accuracy": 0.007434944237918215,
+      "success_rate": 0.9925650557620818,
+      "mean_distance": 2.3149846120195265,
+      "distance_ratio": 2.502564298089517,
+      "status": "moderate"
+    },
+    {
+      "epsilon": 2.0,
+      "clean_accuracy": 0.9814126394052045,
+      "adversarial_accuracy": 0.0007434944237918215,
+      "success_rate": 0.9992565055762082,
+      "mean_distance": 3.0738177917212273,
+      "distance_ratio": 3.3228845774846207,
+      "status": "moderate"
+    },
+    {
+      "epsilon": 3.0,
+      "clean_accuracy": 0.9814126394052045,
+      "adversarial_accuracy": 0.0007434944237918215,
+      "success_rate": 0.9992565055762082,
+      "mean_distance": 5.269554269965291,
+      "distance_ratio": 5.696538246686658,
+      "status": "moderate"
+    }
+  ]
+}

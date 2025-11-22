@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Varanasi"
+    given-names: "Sai Srinivasa Karthik"
+    email: varanasikarthik44@gmail.com
+    affiliation: "GITAM University, Department of Computer Science and Engineering (Cybersecurity)"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+title: "Feature-Aware Adversarial Attacks for MANET Intrusion Detection Systems"
+version: 1.0.0
+date-released: 2024-11-22
+url: "https://github.com/vssk18/manet-adversarial-ids"
+repository-code: "https://github.com/vssk18/manet-adversarial-ids"
+keywords:
+  - "adversarial machine learning"
+  - "MANET security"
+  - "intrusion detection"
+  - "domain constraints"
+  - "manifold analysis"
+  - "network security"
+license: MIT
+abstract: >
+  This repository implements feature-aware adversarial attacks
+  that respect domain constraints for realistic evaluation of
+  Mobile Ad Hoc Network (MANET) intrusion detection systems.
+  Unlike standard adversarial attacks that can produce physically
+  impossible network traffic, our approach generates adversarial
+  examples that could actually occur in real-world deployments.

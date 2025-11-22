@@ -1,0 +1,11 @@
+Feature,Min,Max,Max Pert.,Unit
+Packet Rate,0,1000,10.0,packets/sec
+Byte Count,64,65535,100.0,bytes
+Flow Duration,0,300,1.0,seconds
+Inter Arrival Time,0,1,0.01,seconds
+Packet Size Variance,0,2000,50.0,bytes
+Protocol Type,6,17,0.0,discrete
+Hop Count,1,15,1.0,hops
+Route Changes,0,10,1.0,count
+Signal Strength,-100,-20,2.0,dBm
+Node Mobility,0,20,1.0,m/s

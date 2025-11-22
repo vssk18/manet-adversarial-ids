@@ -1,0 +1,14 @@
+{
+  "logistic_regression": {
+    "accuracy": 0.9814126394052045,
+    "model_type": "Logistic Regression"
+  },
+  "decision_tree": {
+    "accuracy": 0.971003717472119,
+    "model_type": "Decision Tree"
+  },
+  "xgboost": {
+    "accuracy": 0.9873605947955391,
+    "model_type": "XGBoost"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "logistic_regression": {
+    "model": "logistic_regression",
+    "epsilon": 0.3,
+    "clean_accuracy": 0.9814126394052045,
+    "fgsm": {
+      "adversarial_accuracy": 0.7858736059479554,
+      "attack_success_rate": 0.2141263940520446
+    },
+    "pgd": {
+      "adversarial_accuracy": 0.9427509293680297,
+      "attack_success_rate": 0.05724907063197027
+    }
+  },
+  "decision_tree": {
+    "model": "decision_tree",
+    "epsilon": 0.3,
+    "clean_accuracy": 0.971003717472119,
+    "fgsm": {
+      "adversarial_accuracy": 0.971003717472119,
+      "attack_success_rate": 0.028996282527881
+    },
+    "pgd": {
+      "adversarial_accuracy": 0.8892193308550186,
+      "attack_success_rate": 0.11078066914498141
+    }
+  },
+  "xgboost": {
+    "model": "xgboost",
+    "epsilon": 0.3,
+    "clean_accuracy": 0.9873605947955391,
+    "fgsm": {
+      "adversarial_accuracy": 0.9873605947955391,
+      "attack_success_rate": 0.01263940520446094
+    },
+    "pgd": {
+      "adversarial_accuracy": 0.9323420074349442,
+      "attack_success_rate": 0.06765799256505578
+    }
+  }
+}
