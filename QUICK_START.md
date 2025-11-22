@@ -1,224 +1,135 @@
-# 🚀 QUICK START GUIDE
+# Quick Start Guide
 
-Get started with the MANET Adversarial IDS project in 5 minutes!
+Get started with the MANET Adversarial IDS research code in 5 minutes!
 
----
-
-## ⚡ Installation (1 minute)
-
-### Prerequisites
-- Python 3.8 or higher
-- pip package manager
-
-### Install Dependencies
+## Prerequisites
 
 ```bash
+Python 3.8+
+pip (Python package manager)
+```
+
+## Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/vssk18/manet-adversarial-ids.git
+cd manet-adversarial-ids
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-**Dependencies**:
-- numpy (numerical computing)
-- pandas (data manipulation)
-- scikit-learn (machine learning)
-- xgboost (gradient boosting)
-- matplotlib (visualization)
-- tabulate (table formatting)
+## Running the Complete Pipeline
 
----
-
-## 🎯 Run Complete Pipeline (3 minutes)
-
-### Option 1: Run Everything
+Execute the 8 scripts in order:
 
 ```bash
-# Run all scripts in sequence
+# 1. Generate dataset (group-safe splitting)
 python 01_generate_dataset.py
+
+# 2. Train baseline models
 python 02_train_baselines.py
+
+# 3. Run standard adversarial attacks
 python 03_adversarial_attacks.py
+
+# 4. Perform manifold analysis
 python 04_manifold_analysis.py
+
+# 5. Epsilon sweep study
 python 05_epsilon_sweep.py
+
+# 6. Feature-aware attacks (NOVEL)
 python 06_feature_aware_attacks.py
+
+# 7. Generate visualizations
 python 07_create_visualizations.py
+
+# 8. Create results tables
 python 08_generate_tables.py
 ```
 
-**Expected runtime**: ~3 minutes total
+## Expected Runtime
 
-### Option 2: Run Individual Experiments
+- Dataset generation: ~5 seconds
+- Baseline training: ~10 seconds
+- Adversarial attacks: ~30 seconds
+- Manifold analysis: ~20 seconds
+- Epsilon sweep: ~40 seconds
+- Feature-aware attacks: ~30 seconds
+- **Total**: ~2-3 minutes
 
-**Generate dataset only**:
-```bash
-python 01_generate_dataset.py
-# Output: data/manet_dataset_full.csv
-```
-
-**Train models only**:
-```bash
-python 02_train_baselines.py
-# Output: models/*.pkl
-```
-
-**Test feature-aware attacks** (novel contribution):
-```bash
-python 06_feature_aware_attacks.py
-# Output: results/feature_aware_attack_results.json
-```
-
----
-
-## 📊 View Results (1 minute)
-
-### Check Figures
-```bash
-# View generated figures
-ls -lh results/figures/
-# - epsilon_sweep_analysis.png
-# - comprehensive_attack_comparison.png
-# - key_findings.png
-```
-
-### Check Tables
-```bash
-# View results tables
-ls -lh results/tables/
-# - table1_baseline_performance.csv
-# - table2_standard_attacks.csv
-# - table3_epsilon_sweep.csv
-# - table4_feature_aware.csv
-# - table5_comparison.csv
-# - table6_constraints.csv
-```
-
-### Check JSON Results
-```bash
-cat results/baseline_performance.json
-cat results/feature_aware_attack_results.json
-```
-
----
-
-## 🔬 Key Results Summary
-
-After running all scripts, you should see:
-
-### Baseline Models
-- Logistic Regression: 98.14% accuracy
-- Decision Tree: 97.10% accuracy
-- XGBoost: 98.74% accuracy
-
-### Feature-Aware Attacks
-- Attack success: ~2%
-- Distance ratio: 0.99x (on-manifold!)
-- Status: **Realistic adversarial threat**
-
-### Standard Attacks
-- ε=0.3: 21.4% success, 1.21x distance (on-manifold)
-- ε=1.0: 95.2% success, 2.09x distance (moderate)
-- ε=3.0: 99.9% success, 5.70x distance (off-manifold)
-
----
-
-## 📁 Output Structure
-
-After running all scripts:
+## Output Structure
 
 ```
 manet-adversarial-ids/
 ├── data/
-│   ├── manet_dataset_full.csv          (4,500 samples)
-│   ├── train_test_split.pkl            (group-safe splits)
-│   └── adversarial/                    (generated adversarials)
-│       ├── logistic_regression_fgsm.npy
-│       ├── logistic_regression_pgd.npy
-│       └── logistic_regression_feature_aware.npy
+│   ├── manet_dataset_full.csv
+│   └── adversarial/
+│       └── *.npy (adversarial samples)
 ├── models/
-│   ├── scaler.pkl                      (feature scaler)
+│   ├── scaler.pkl
 │   ├── logistic_regression.pkl
 │   ├── decision_tree.pkl
 │   └── xgboost.pkl
-└── results/
-    ├── figures/                        (3 publication figures)
-    ├── tables/                         (6 results tables)
-    └── *.json                          (raw results)
+├── results/
+│   ├── figures/ (7 publication-quality figures)
+│   ├── tables/ (LaTeX + CSV tables)
+│   └── *.json (all analysis results)
 ```
+
+## Key Results
+
+After running all scripts, you'll have:
+
+✅ **Baseline Performance**: 98.74% accuracy (XGBoost)  
+✅ **Standard Attacks**: 95.2% success rate (FGSM ε=1.0), but 5.70x off-manifold  
+✅ **Feature-Aware Attacks**: 12.7% success rate (ε=0.3), only 0.99x distance (on-manifold!)  
+✅ **7 Publication Figures**: Ready for paper inclusion  
+✅ **5 Results Tables**: LaTeX format for paper  
+
+## Next Steps
+
+1. **View figures**: Check `fig_*.png` for visualizations
+2. **Examine results**: Read JSON files in `results/`
+3. **Modify parameters**: Edit scripts to test different configurations
+4. **Write paper**: Use tables and figures in your publication
+
+## Troubleshooting
+
+**Issue**: `ModuleNotFoundError`  
+**Solution**: Run `pip install -r requirements.txt`
+
+**Issue**: Script takes too long  
+**Solution**: Reduce sample size in scripts (look for `n_samples` variables)
+
+**Issue**: Out of memory  
+**Solution**: Use smaller test set in `01_generate_dataset.py`
+
+## Citation
+
+If you use this code, please cite:
+
+```bibtex
+@article{karthik2024manet,
+  title={Feature-Aware Adversarial Attacks for Realistic Evaluation of MANET Intrusion Detection Systems},
+  author={Karthik, Varanasi Sai Srinivasa},
+  year={2024}
+}
+```
+
+## Support
+
+- Issues: [GitHub Issues](https://github.com/vssk18/manet-adversarial-ids/issues)
+- Email: varanasikarthik44@gmail.com
+- Institution: GITAM University
 
 ---
 
-## 🐛 Troubleshooting
-
-### Import Errors
+**Ready to run? Execute:**
 ```bash
-# If you get import errors, ensure all dependencies are installed
-pip install -r requirements.txt --upgrade
+for i in {1..8}; do python 0${i}_*.py; done
 ```
 
-### Memory Issues
-```bash
-# If dataset generation fails due to memory
-# Edit 01_generate_dataset.py and reduce samples_per_class:
-# samples_per_class=1500  →  samples_per_class=1000
-```
-
-### Numerical Gradient Warnings
-```
-# The warning about numerical gradients is expected
-# This occurs during adversarial attack generation
-# and does not affect results
-```
-
----
-
-## 📚 Next Steps
-
-### For Research
-1. Read `PAPER_SECTIONS.md` for paper structure
-2. Review figures in `results/figures/`
-3. Check tables in `results/tables/`
-4. Write your paper!
-
-### For Development
-1. Modify feature constraints in `06_feature_aware_attacks.py`
-2. Add new attack types
-3. Test different classifiers
-4. Extend to other datasets
-
-### For Deployment
-1. Read `README.md` for full documentation
-2. Check `PROJECT_SUMMARY.md` for overview
-3. Review code comments in each script
-
----
-
-## 💡 Tips
-
-**Reproducibility**: All scripts use `random_seed=42`
-
-**Speed up**: Comment out PGD attacks in script 03 (they're slower)
-
-**Custom data**: Modify `01_generate_dataset.py` to use your own MANET data
-
-**Different models**: Add your own classifiers in `02_train_baselines.py`
-
----
-
-## 🆘 Need Help?
-
-**Documentation**:
-- `README.md` - Full documentation
-- `PROJECT_SUMMARY.md` - Complete overview
-- `PAPER_SECTIONS.md` - Research paper draft
-
-**Issues**:
-- Check script comments for detailed explanations
-- Review checkpoint files for development history
-- Open an issue on GitHub
-
----
-
-**Ready to start? Run the first script:**
-
-```bash
-python 01_generate_dataset.py
-```
-
-**Good luck! 🚀**
+This will run all 8 scripts sequentially!

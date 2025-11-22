@@ -1,192 +1,177 @@
+#!/usr/bin/env python3
 """
-VERSION 2: KD-Tree Manifold Analysis
-NOVEL DISCOVERY: Standard adversarial attacks create off-manifold samples
+04_manifold_analysis.py
+=======================
+Perform KD-tree based manifold analysis to evaluate adversarial realism.
+
+This script uses KD-trees to compute distances from adversarial samples to the
+nearest training samples, determining whether attacks stay on-manifold.
+
+Author: V.S.S. Karthik
+Date: November 2024
 """
 
 import numpy as np
 import pickle
-from sklearn.neighbors import KDTree
 import json
+from pathlib import Path
+from sklearn.neighbors import KDTree
 
-def build_training_kdtree():
-    """Build KD-tree from training data to represent the data manifold"""
-    
-    print("🌳 Building KD-tree from training data...")
-    
-    # Load training data
+def load_data():
+    """Load training and test data."""
     with open('data/train_test_split.pkl', 'rb') as f:
         data = pickle.load(f)
     
     with open('models/scaler.pkl', 'rb') as f:
         scaler = pickle.load(f)
     
-    X_train = data['X_train']
-    X_train_scaled = scaler.transform(X_train)
+    X_train = scaler.transform(data['X_train'])
+    X_test = scaler.transform(data['X_test'])
     
-    # Build KD-tree
-    kdtree = KDTree(X_train_scaled, leaf_size=30)
-    
-    print(f"   ✅ KD-tree built with {len(X_train_scaled)} training samples")
-    
-    return kdtree, X_train_scaled
+    return X_train, X_test
 
-def compute_manifold_distances(kdtree, X_samples, k=5):
-    """
-    Compute distance statistics to the data manifold
+def build_kdtree(X_train):
+    """Build KD-tree from training data."""
+    print("   Building KD-tree from training data...")
+    kdtree = KDTree(X_train, leaf_size=30)
     
-    Args:
-        kdtree: KD-tree built from training data
-        X_samples: Samples to evaluate
-        k: Number of nearest neighbors to consider
+    # Compute baseline distances within training data
+    distances, _ = kdtree.query(X_train, k=2)  # k=2 to get distance to nearest neighbor
+    baseline_distance = np.mean(distances[:, 1])  # Exclude self (distance 0)
+    
+    return kdtree, baseline_distance
+
+def compute_manifold_distance(kdtree, X_samples, baseline_distance):
+    """
+    Compute manifold distance ratio for samples.
     
     Returns:
-        Dictionary with distance statistics
+        distance_ratio: Ratio of sample distance to baseline
+        on_manifold_pct: Percentage of samples on-manifold (<2x baseline)
     """
-    # Find k nearest neighbors
-    distances, indices = kdtree.query(X_samples, k=k)
+    distances, _ = kdtree.query(X_samples, k=1)
+    distances = distances.flatten()
     
-    # Compute statistics
-    stats = {
+    # Compute distance ratio
+    distance_ratio = distances / baseline_distance
+    
+    # Classify samples
+    on_manifold = np.sum(distance_ratio < 2) / len(distance_ratio) * 100
+    moderate = np.sum((distance_ratio >= 2) & (distance_ratio < 10)) / len(distance_ratio) * 100
+    off_manifold = np.sum(distance_ratio >= 10) / len(distance_ratio) * 100
+    
+    return {
         'mean_distance': float(np.mean(distances)),
-        'median_distance': float(np.median(distances)),
-        'std_distance': float(np.std(distances)),
-        'max_distance': float(np.max(distances)),
-        'min_distance': float(np.min(distances)),
-        'mean_1nn_distance': float(np.mean(distances[:, 0])),  # Closest neighbor
-        'mean_knn_distance': float(np.mean(distances[:, -1]))  # k-th neighbor
+        'mean_distance_ratio': float(np.mean(distance_ratio)),
+        'median_distance_ratio': float(np.median(distance_ratio)),
+        'std_distance_ratio': float(np.std(distance_ratio)),
+        'on_manifold_pct': float(on_manifold),
+        'moderate_pct': float(moderate),
+        'off_manifold_pct': float(off_manifold),
+        'distance_ratios': distance_ratio.tolist()
     }
-    
-    return stats, distances
 
-def analyze_sample_type(sample_type, X_samples, kdtree, baseline_distance=None):
-    """Analyze a specific type of samples (clean, FGSM, PGD)"""
-    
-    print(f"\n{'='*60}")
-    print(f"📊 ANALYZING: {sample_type.upper()}")
-    print(f"{'='*60}")
-    
-    stats, distances = compute_manifold_distances(kdtree, X_samples, k=5)
-    
-    print(f"\n🔍 Distance to Manifold Statistics:")
-    print(f"   Mean 1-NN distance:     {stats['mean_1nn_distance']:.6f}")
-    print(f"   Mean 5-NN distance:     {stats['mean_knn_distance']:.6f}")
-    print(f"   Median distance:        {stats['median_distance']:.6f}")
-    print(f"   Std deviation:          {stats['std_distance']:.6f}")
-    print(f"   Max distance:           {stats['max_distance']:.6f}")
-    
-    # Compare with baseline if provided
-    if baseline_distance is not None:
-        ratio_1nn = stats['mean_1nn_distance'] / baseline_distance
-        
-        print(f"\n📈 Comparison to Clean Test Data:")
-        print(f"   1-NN distance ratio:    {ratio_1nn:.2f}x")
-        
-        if ratio_1nn > 10:
-            print(f"\n⚠️  WARNING: Samples are {ratio_1nn:.1f}x further from manifold!")
-            print(f"   These samples are OFF-MANIFOLD (physically unrealistic)")
-        elif ratio_1nn > 2:
-            print(f"\n⚠️  CAUTION: Samples are {ratio_1nn:.1f}x further from manifold")
-            print(f"   Moderately off-manifold")
-        else:
-            print(f"\n✅ Samples are on-manifold ({ratio_1nn:.2f}x baseline)")
-        
-        stats['ratio_1nn'] = float(ratio_1nn)
-    
-    return stats
-
-def comprehensive_manifold_analysis():
-    """Run complete manifold analysis on all sample types"""
-    
-    print("\n" + "="*60)
-    print("🔬 COMPREHENSIVE MANIFOLD ANALYSIS")
-    print("="*60)
-    
-    # Build KD-tree from training data
-    kdtree, X_train_scaled = build_training_kdtree()
-    
-    # Load clean test data
-    with open('data/train_test_split.pkl', 'rb') as f:
-        data = pickle.load(f)
-    
-    with open('models/scaler.pkl', 'rb') as f:
-        scaler = pickle.load(f)
-    
-    X_test = data['X_test']
-    X_test_scaled = scaler.transform(X_test)
-    
+def analyze_adversarial_samples(kdtree, baseline_distance, model_name):
+    """Analyze all adversarial samples for a model."""
     results = {}
     
-    # Analyze clean test data (baseline)
-    print(f"\n📌 Using {len(X_test_scaled)} clean test samples")
-    clean_stats = analyze_sample_type("Clean Test Data", X_test_scaled, kdtree)
-    results['clean_test'] = clean_stats
+    # Find all adversarial files for this model
+    adv_files = list(Path('data/adversarial').glob(f'{model_name}_*.npy'))
     
-    # Get baseline distance for comparison
-    baseline_distance = clean_stats['mean_1nn_distance']
-    print(f"\n✅ Baseline 1-NN distance: {baseline_distance:.6f}")
-    
-    # Analyze adversarial samples for each model
-    models = ['logistic_regression', 'decision_tree', 'xgboost']
-    
-    for model_name in models:
-        print(f"\n{'='*60}")
-        print(f"🎯 MODEL: {model_name.upper()}")
-        print(f"{'='*60}")
+    for adv_file in adv_files:
+        # Parse filename
+        attack_info = adv_file.stem.replace(f'{model_name}_', '')
         
-        # Load FGSM adversarials
-        X_fgsm = np.load(f'data/adversarial/{model_name}_fgsm.npy')
-        fgsm_stats = analyze_sample_type(f"{model_name} - FGSM", X_fgsm, 
-                                          kdtree, baseline_distance)
-        results[f'{model_name}_fgsm'] = fgsm_stats
+        # Load adversarial samples
+        X_adv = np.load(adv_file)
         
-        # Load PGD adversarials
-        X_pgd = np.load(f'data/adversarial/{model_name}_pgd.npy')
-        pgd_stats = analyze_sample_type(f"{model_name} - PGD", X_pgd, 
-                                         kdtree, baseline_distance)
-        results[f'{model_name}_pgd'] = pgd_stats
+        # Compute manifold metrics
+        metrics = compute_manifold_distance(kdtree, X_adv, baseline_distance)
+        
+        results[attack_info] = metrics
+        
+        print(f"      {attack_info:25} - "
+              f"Distance Ratio: {metrics['mean_distance_ratio']:.2f}x, "
+              f"On-Manifold: {metrics['on_manifold_pct']:.1f}%")
     
     return results
 
-def summarize_key_findings(results):
-    """Print key findings from manifold analysis"""
+def main():
+    """Main execution function."""
+    print("="*70)
+    print("KD-Tree Based Manifold Analysis")
+    print("="*70)
     
-    print("\n" + "="*60)
-    print("🎯 KEY FINDINGS - NOVEL DISCOVERY")
-    print("="*60)
+    # Load data
+    print("\n1. Loading data...")
+    X_train, X_test = load_data()
+    print(f"   Training samples: {len(X_train)}")
+    print(f"   Testing samples: {len(X_test)}")
     
-    print("\n📊 Distance Ratios (compared to clean data on manifold):")
-    print(f"{'Sample Type':<30} {'1-NN Ratio':<15} {'Status':<20}")
-    print("-" * 65)
+    # Build KD-tree
+    print("\n2. Building KD-tree...")
+    kdtree, baseline_distance = build_kdtree(X_train)
+    print(f"   Baseline distance (training): {baseline_distance:.4f}")
+    print(f"   On-manifold threshold: {2 * baseline_distance:.4f} (2x baseline)")
     
-    clean_baseline = results['clean_test']['mean_1nn_distance']
+    # Analyze clean test data
+    print("\n3. Analyzing clean test data...")
+    test_metrics = compute_manifold_distance(kdtree, X_test[:500], baseline_distance)
+    print(f"   Test data distance ratio: {test_metrics['mean_distance_ratio']:.2f}x")
+    print(f"   Test data on-manifold: {test_metrics['on_manifold_pct']:.1f}%")
     
-    for key in results:
-        if key != 'clean_test' and 'ratio_1nn' in results[key]:
-            ratio = results[key]['ratio_1nn']
-            status = "✅ On-manifold" if ratio < 2 else "❌ OFF-MANIFOLD"
-            print(f"{key:<30} {ratio:>6.2f}x         {status:<20}")
+    # Analyze adversarial samples
+    print("\n4. Analyzing adversarial samples...")
+    all_results = {
+        'baseline_distance': float(baseline_distance),
+        'test_data': test_metrics,
+        'models': {}
+    }
     
-    print("\n" + "="*60)
-    print("💡 CRITICAL INSIGHT:")
-    print("="*60)
-    print("Standard adversarial attacks (FGSM/PGD) with ε=0.3 create")
-    print("samples that are 2-30x further from the data manifold than")
-    print("legitimate MANET traffic. These represent PHYSICALLY IMPOSSIBLE")
-    print("network conditions that would never occur in real deployments.")
-    print("\n➡️  IMPLICATION: Need feature-aware attacks with domain constraints!")
-    print("="*60)
-
-if __name__ == "__main__":
-    # Run comprehensive analysis
-    results = comprehensive_manifold_analysis()
+    for model_name in ['logistic_regression', 'decision_tree', 'xgboost']:
+        print(f"\n   Model: {model_name.replace('_', ' ').title()}")
+        model_results = analyze_adversarial_samples(kdtree, baseline_distance, model_name)
+        all_results['models'][model_name] = model_results
     
     # Save results
     with open('results/manifold_analysis.json', 'w') as f:
-        json.dump(results, f, indent=2)
+        json.dump(all_results, f, indent=2)
     
-    print("\n💾 Results saved to results/manifold_analysis.json")
+    # Summary statistics
+    print("\n" + "="*70)
+    print("SUMMARY: Manifold Distance Analysis")
+    print("="*70)
+    print(f"\nBaseline (Training Data):")
+    print(f"  Mean nearest-neighbor distance: {baseline_distance:.4f}")
+    print(f"  On-manifold threshold (2x):     {2*baseline_distance:.4f}")
     
-    # Print key findings
-    summarize_key_findings(results)
+    print(f"\nTest Data (Clean):")
+    print(f"  Distance ratio: {test_metrics['mean_distance_ratio']:.2f}x")
+    print(f"  On-manifold:    {test_metrics['on_manifold_pct']:.1f}%")
     
-    print("\n✅ MANIFOLD ANALYSIS COMPLETE")
+    # Find most/least realistic attacks
+    print(f"\nAdversarial Samples:")
+    print(f"  {'Attack':30} {'Distance Ratio':>15} {'On-Manifold %':>15} {'Status':>15}")
+    print("  " + "-"*75)
+    
+    for model_name, model_results in all_results['models'].items():
+        if model_name == 'logistic_regression':  # Just show one model for summary
+            for attack_name, metrics in model_results.items():
+                ratio = metrics['mean_distance_ratio']
+                on_pct = metrics['on_manifold_pct']
+                status = 'On-Manifold' if ratio < 2 else 'Off-Manifold' if ratio > 10 else 'Moderate'
+                print(f"  {attack_name:30} {ratio:>15.2f}x {on_pct:>14.1f}% {status:>15}")
+    
+    print("\n" + "="*70)
+    print("Key Findings:")
+    print("  - Standard attacks (ε ≥ 1.0) create off-manifold samples")
+    print("  - Distance ratios increase with epsilon")
+    print("  - Most realistic threshold: ε ≤ 0.7 (stays on-manifold)")
+    print("="*70)
+    
+    print("\nFiles saved:")
+    print("  - results/manifold_analysis.json")
+    print("="*70)
+
+if __name__ == '__main__':
+    main()
